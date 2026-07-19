@@ -26,4 +26,3 @@
 - **Lint:** `npm run lint` (uses oxlint, not ESLint)
 - **Format:** `npm run format` (Prettier)
 - **Test:** Not configured (no test framework installed)
-
