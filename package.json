@@ -2,29 +2,23 @@
   "name": "ai-playground",
   "private": true,
   "version": "0.0.0",
-  "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
-    "lint": "oxlint",
+    "dev": "yarn workspace @ai-playground/web dev",
+    "build": "yarn workspace @ai-playground/web build",
+    "build:brand-b": "yarn workspace @ai-playground/web build:brand-b",
+    "lint": "yarn workspace @ai-playground/web lint",
     "format": "prettier --write .",
-    "preview": "vite preview"
-  },
-  "dependencies": {
-    "@tailwindcss/vite": "4.3.3",
-    "react": "19.2.7",
-    "react-dom": "19.2.7",
-    "react-dropzone": "19.1.1",
-    "tailwindcss": "4.3.3"
+    "preview": "yarn workspace @ai-playground/web preview",
+    "server:dev": "yarn workspace @ai-playground/server dev",
+    "server:start": "yarn workspace @ai-playground/server start",
+    "server:typecheck": "yarn workspace @ai-playground/server typecheck",
+    "mcp:start": "yarn workspace @ai-playground/mcp-api-tool start"
   },
   "devDependencies": {
-    "@types/node": "24.13.2",
-    "@types/react": "19.2.17",
-    "@types/react-dom": "19.2.3",
-    "@vitejs/plugin-react": "6.0.3",
-    "oxlint": "1.71.0",
-    "prettier": "^3.5.3",
-    "typescript": "7.0.2",
-    "vite": "8.1.1"
-  }
+    "prettier": "3.5.3"
+  },
+  "packageManager": "yarn@4.17.1"
 }

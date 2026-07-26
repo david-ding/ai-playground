@@ -10,11 +10,13 @@ export async function getPresignedUrl(
   fileName: string,
   contentType: string,
   fileSize?: number,
+  signal?: AbortSignal,
 ): Promise<PresignedUrlResponse> {
   const res = await fetch(`${API_BASE}/api/upload-url`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ fileName, contentType, fileSize }),
+    signal,
   });
 
   if (!res.ok) {
