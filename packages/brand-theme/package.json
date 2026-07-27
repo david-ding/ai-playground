@@ -1,0 +1,29 @@
+{
+  "name": "@david-ding/brand-theme",
+  "version": "0.1.0",
+  "description": "Brand theme CSS tokens for ai-playground",
+  "license": "MIT",
+  "type": "module",
+  "main": "themes/brand-a.css",
+  "files": [
+    "themes/"
+  ],
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/david-ding/ai-playground.git"
+  },
+  "bugs": {
+    "url": "https://github.com/david-ding/ai-playground/issues"
+  },
+  "homepage": "https://github.com/david-ding/ai-playground#readme",
+  "scripts": {
+    "sync": "node scripts/sync.mjs"
+  },
+  "packageManager": "yarn@4.17.1",
+  "devDependencies": {
+    "@types/node": "^26.1.1"
+  }
+}

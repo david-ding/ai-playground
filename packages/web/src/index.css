@@ -1,2 +1,2 @@
 @import 'tailwindcss';
-@import './brand.css';
+@import '../gen/brand.css';

@@ -1,0 +1,32 @@
+name: Publish brand-theme
+
+on:
+  push:
+    tags:
+      - 'brand-theme-v*'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://npm.pkg.github.com
+          scope: '@david-ding'
+
+      - run: corepack enable
+
+      - run: yarn install --immutable
+
+      - run: yarn workspace @david-ding/brand-theme sync
+
+      - run: npm publish
+        working-directory: packages/brand-theme
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

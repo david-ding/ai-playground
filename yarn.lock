@@ -322,6 +322,14 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@david-ding/brand-theme@workspace:packages/brand-theme":
+  version: 0.0.0-use.local
+  resolution: "@david-ding/brand-theme@workspace:packages/brand-theme"
+  dependencies:
+    "@types/node": "npm:^26.1.1"
+  languageName: unknown
+  linkType: soft
+
 "@emnapi/core@npm:1.11.1":
   version: 1.11.1
   resolution: "@emnapi/core@npm:1.11.1"
@@ -1185,7 +1193,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:26.1.1":
+"@types/node@npm:*, @types/node@npm:26.1.1, @types/node@npm:^26.1.1":
   version: 26.1.1
   resolution: "@types/node@npm:26.1.1"
   dependencies:
