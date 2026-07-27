@@ -55,8 +55,4 @@ This syncs the latest themes from the web package, then publishes to GitHub Pack
 
 ## Development
 
-To sync the latest theme files from the web package:
-
-```bash
-yarn sync
-```
+The theme CSS files are authored directly in `themes/`. When the web package is built, the Vite plugin copies the active brand's theme from the installed `@david-ding/brand-theme` package into `gen/brand.css`.

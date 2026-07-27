@@ -19,9 +19,6 @@
     "url": "https://github.com/david-ding/ai-playground/issues"
   },
   "homepage": "https://github.com/david-ding/ai-playground#readme",
-  "scripts": {
-    "sync": "node scripts/sync.mjs"
-  },
   "packageManager": "yarn@4.17.1",
   "devDependencies": {
     "@types/node": "^26.1.1"

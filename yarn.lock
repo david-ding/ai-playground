@@ -38,6 +38,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@ai-playground/web@workspace:packages/web"
   dependencies:
+    "@david-ding/brand-theme": "npm:0.1.0"
     "@tailwindcss/vite": "npm:4.3.3"
     "@types/node": "npm:24.13.2"
     "@types/react": "npm:19.2.17"
@@ -322,7 +323,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@david-ding/brand-theme@workspace:packages/brand-theme":
+"@david-ding/brand-theme@npm:0.1.0, @david-ding/brand-theme@workspace:packages/brand-theme":
   version: 0.0.0-use.local
   resolution: "@david-ding/brand-theme@workspace:packages/brand-theme"
   dependencies:

@@ -16,8 +16,11 @@
     "server:start": "yarn workspace @ai-playground/server start",
     "server:typecheck": "yarn workspace @ai-playground/server typecheck",
     "mcp:start": "yarn workspace @ai-playground/mcp-api-tool start",
-    "brand-theme:sync": "yarn workspace @david-ding/brand-theme sync",
-    "brand-theme:publish": "yarn workspace @david-ding/brand-theme sync && npm publish packages/brand-theme"
+    "brand-theme:publish": "npm publish packages/brand-theme"
+  },
+  "engines": {
+    "node": ">=24.11.0",
+    "yarn": ">=4.17.1"
   },
   "devDependencies": {
     "prettier": "3.5.3"
