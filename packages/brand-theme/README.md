@@ -23,6 +23,36 @@ Then use the CSS custom properties in your markup:
 | `themes/brand-a.css` | Indigo / Gray / Red / Green |
 | `themes/brand-b.css` | Blue / Stone / Rose / Emerald |
 
+## Publishing
+
+### Prerequisites
+
+1. A GitHub [classic PAT](https://github.com/settings/tokens) with `write:packages` scope
+2. Set the token as an environment variable:
+
+```bash
+export NODE_AUTH_TOKEN=ghp_...
+```
+
+### Via CI (recommended)
+
+Push a tag matching `brand-theme-v*`:
+
+```bash
+git tag brand-theme-v0.1.0
+git push origin brand-theme-v0.1.0
+```
+
+The `.github/workflows/publish-brand-theme.yml` workflow will sync themes, build, and publish.
+
+### Via CLI
+
+```bash
+yarn brand-theme:publish
+```
+
+This syncs the latest themes from the web package, then publishes to GitHub Packages. Bump the `version` field in `package.json` before publishing.
+
 ## Development
 
 To sync the latest theme files from the web package:
