@@ -1,32 +1,41 @@
-# React + TypeScript + Vite
+# ai-playground
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+## Monorepo Structure
 
-Currently, two official plugins are available:
+- **packages/web/** - Vite/React frontend (`@ai-playground/web`)
+- **packages/server/** - Express backend (`@ai-playground/server`)
+- **packages/mcp-api-tool/** - MCP API tool (`@ai-playground/mcp-api-tool`)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Tech Stack
 
-## React Compiler
+- **Framework:** React 19 with TypeScript 7
+- **Build:** Vite 8
+- **Package Manager:** Yarn 4 (workspaces)
+- **Styling:** Tailwind CSS v4
+- **Linting:** oxlint (not ESLint)
+- **Formatting:** Prettier
+- **Testing:** None configured
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Code Style
 
-## Expanding the Oxlint configuration
+- Functional components with hooks (no class components)
+- PascalCase for components, camelCase for everything else
+- Named exports preferred over default exports
+- Props typed with `interface`, not `type`
+- Tailwind utility classes for styling (no CSS modules or styled-components)
+- Semicolons required
+- Single quotes for strings
+- Prettier used for formatting
+- Exact npm package versions in `package.json` (no `^`, `~`, or `*` ranges)
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+## Useful Commands
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
-```
-
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+- **Dev server:** `yarn dev`
+- **Build:** `yarn build` (Vite)
+- **Lint:** `yarn lint` (oxlint)
+- **Format:** `yarn format` (Prettier)
+- **Server dev:** `yarn server:dev`
+- **Server start:** `yarn server:start`
+- **Server typecheck:** `yarn server:typecheck`
+- **Run script in a package:** `yarn workspace <name> <script>`
+- **Test:** Not configured (no test framework installed)

@@ -48,7 +48,7 @@ export default function FileUpload({ acceptedTypes = DEFAULT_ACCEPTED_TYPES }: F
   });
 
   return (
-    <div className="mx-auto max-w-md space-y-4">
+    <div className="mx-auto max-w-md space-y-4" data-testid="file-upload">
       <div
         {...getRootProps()}
         className={`cursor-pointer rounded-lg w-full border-2 border-dashed p-8 text-center transition-colors ${
