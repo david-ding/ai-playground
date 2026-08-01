@@ -8,6 +8,7 @@ on:
 permissions:
   contents: read
   packages: write
+  pages: write
 
 jobs:
   build-and-push:
@@ -56,15 +57,36 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Upload VR test artifacts
-        if: always()
-        uses: actions/upload-artifact@v4
+      # - name: Upload VR test artifacts
+      #   if: always()
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: vr-test-results
+      #     path: |
+      #       packages/web/__screenshots__/**
+      #       packages/web/playwright-report/**
+      #     retention-days: 7
+
+      - name: Prepare pages directory
+        run: |
+          mkdir pages
+          cp -R packages/web/__screenshots__ pages/pr-${{ github.event.number }}
+          cp -R packages/web/playwright-report pages/pr-${{ github.event.number }}
+
+      - name: Publish reports to github pages
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          name: vr-test-results
-          path: |
-            packages/web/__screenshots__/**
-            packages/web/playwright-report/**
-          retention-days: 7
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: pages
+          destination_dir: pr-${{ github.event.number }}
+          keep_files: true
+
+      - name: Comment PR
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          message: |
+            ## 🎭 Playwright Report
+            https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/pr-${{ github.event.number }}/
 
       - name: Push image
         uses: docker/build-push-action@v6
