@@ -15,15 +15,27 @@
     "server:dev": "yarn workspace @ai-playground/server dev",
     "server:start": "yarn workspace @ai-playground/server start",
     "server:typecheck": "yarn workspace @ai-playground/server typecheck",
+    "typecheck": "yarn workspace @ai-playground/web typecheck && yarn workspace @ai-playground/server typecheck",
     "mcp:start": "yarn workspace @ai-playground/mcp-api-tool start",
-    "brand-theme:publish": "npm publish packages/brand-theme"
+    "brand-theme:publish": "npm publish packages/brand-theme",
+    "vr:build": "yarn workspace @ai-playground/web vr:build",
+    "vr:test": "yarn workspace @ai-playground/web vr:test",
+    "vr:update": "yarn workspace @ai-playground/web vr:update"
   },
   "engines": {
     "node": ">=24.11.0",
     "yarn": ">=4.17.1"
   },
   "devDependencies": {
-    "prettier": "3.5.3"
+    "@playwright/test": "1.62.1",
+    "@storybook/react": "10.5.5",
+    "@storybook/react-vite": "10.5.5",
+    "@tailwindcss/vite": "4.3.3",
+    "@types/node": "24.13.2",
+    "@vitejs/plugin-react": "6.0.3",
+    "prettier": "3.5.3",
+    "storybook": "10.5.5",
+    "vite": "8.1.1"
   },
   "packageManager": "yarn@4.17.1"
 }

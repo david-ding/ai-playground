@@ -1,0 +1,32 @@
+name: Visual regression PR gate
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  vr-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: .nvmrc
+          cache: yarn
+
+      - run: corepack enable
+
+      - run: yarn install --immutable
+
+      - run: yarn lint
+
+      - run: yarn typecheck
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Build and compare all brand snapshots
+        run: yarn vr:test

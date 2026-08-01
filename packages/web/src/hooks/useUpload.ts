@@ -8,8 +8,8 @@ export interface UploadState {
   result?: PresignedUrlResponse;
 }
 
-export function useUpload() {
-  const [state, setState] = useState<UploadState>({ status: 'idle', progress: 0 });
+export function useUpload(initialState: UploadState = { status: 'idle', progress: 0 }) {
+  const [state, setState] = useState<UploadState>(initialState);
   const xhrRef = useRef<XMLHttpRequest | null>(null);
   const controllerRef = useRef<AbortController | null>(null);
   const uploadIdRef = useRef(0);

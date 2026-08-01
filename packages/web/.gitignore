@@ -1,1 +1,5 @@
 gen
+storybook-static
+dist
+playwright-report
+test-results

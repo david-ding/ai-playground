@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { useUpload } from '../hooks/useUpload';
+import { useUpload, type UploadState } from '../hooks/useUpload';
 
 const DEFAULT_ACCEPTED_TYPES: Record<string, string[]> = {
   'image/jpeg': ['.jpg', '.jpeg'],
@@ -17,10 +17,14 @@ function formatAcceptedExtensions(types: Record<string, string[]>): string {
 
 interface FileUploadProps {
   acceptedTypes?: Record<string, string[]>;
+  initialUploadState?: UploadState;
 }
 
-export default function FileUpload({ acceptedTypes = DEFAULT_ACCEPTED_TYPES }: FileUploadProps) {
-  const { upload, state, reset, abort } = useUpload();
+export default function FileUpload({
+  acceptedTypes = DEFAULT_ACCEPTED_TYPES,
+  initialUploadState,
+}: FileUploadProps) {
+  const { upload, state, reset, abort } = useUpload(initialUploadState);
   const [validationError, setValidationError] = useState<string | null>(null);
 
   const onDrop = useCallback(
