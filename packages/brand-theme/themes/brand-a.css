@@ -1,5 +1,5 @@
 @theme inline {
-  --color-input-border: var(--color-gray-300);
+  --color-input-border: var(--color-gray-400);
   --color-input-border-hover: var(--color-gray-400);
   --color-input-border-active: var(--color-indigo-500);
   --color-input-surface: var(--color-indigo-50);
