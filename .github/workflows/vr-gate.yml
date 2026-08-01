@@ -1,0 +1,50 @@
+name: VR gate (reusable)
+
+on:
+  workflow_call:
+    inputs:
+      image-tag:
+        description: ci-toolchain image tag to run on
+        required: false
+        type: string
+        default: stable
+    secrets:
+      NODE_AUTH_TOKEN:
+        required: false
+
+jobs:
+  vr-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      packages: read
+    container:
+      image: ghcr.io/david-ding/ci-toolchain:${{ inputs.image-tag }}
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ github.token }}
+    env:
+      YARN_CACHE_FOLDER: ${{ github.workspace }}/.yarn-cache
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache yarn dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ github.workspace }}/.yarn-cache
+          key: yarn-${{ hashFiles('yarn.lock') }}
+
+      - name: Install dependencies
+        run: yarn install --immutable
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
+
+      - name: Lint
+        run: yarn lint
+
+      - name: Typecheck
+        run: yarn typecheck
+
+      - name: Build and compare all brand snapshots
+        run: yarn vr:test

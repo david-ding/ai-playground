@@ -7,25 +7,9 @@ on:
 
 jobs:
   vr-gate:
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: .nvmrc
-          cache: yarn
-
-      - run: corepack enable
-
-      - run: yarn install --immutable
-
-      - name: Install Playwright browsers
-        run: npx playwright install --with-deps chromium
-
-      - name: Build and compare all brand snapshots
-        run: yarn vr:test
+    uses: ./.github/workflows/vr-gate.yml
+    secrets:
+      NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   publish:
     runs-on: ubuntu-latest
@@ -33,18 +17,25 @@ jobs:
     permissions:
       contents: read
       packages: write
+    container:
+      image: ghcr.io/david-ding/ci-toolchain:stable
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ github.token }}
+    env:
+      YARN_CACHE_FOLDER: ${{ github.workspace }}/.yarn-cache
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: Cache yarn dependencies
+        uses: actions/cache@v4
         with:
-          node-version: .nvmrc
-          registry-url: https://npm.pkg.github.com
-          scope: "@david-ding"
-
-      - run: corepack enable
+          path: ${{ github.workspace }}/.yarn-cache
+          key: yarn-${{ hashFiles('yarn.lock') }}
 
       - run: yarn install --immutable
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - run: npm publish
         working-directory: packages/brand-theme

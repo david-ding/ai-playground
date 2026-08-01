@@ -1,0 +1,69 @@
+name: Build ci-toolchain image
+
+on:
+  push:
+    tags:
+      - "toolchain-v*"
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Compute image tag
+        id: meta
+        run: |
+          NODE_VERSION=$(sed 's/^v//' .nvmrc)
+          PLAYWRIGHT_VERSION=$(node -p "require('./package.json').devDependencies['@playwright/test']")
+          echo "immutable=node${NODE_VERSION}-pw${PLAYWRIGHT_VERSION}" >> "$GITHUB_OUTPUT"
+          echo "node_version=${NODE_VERSION}" >> "$GITHUB_OUTPUT"
+          echo "playwright_version=${PLAYWRIGHT_VERSION}" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and load image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: .github/docker/ci-toolchain.Dockerfile
+          build-args: |
+            PLAYWRIGHT_VERSION=${{ steps.meta.outputs.playwright_version }}
+          tags: ci-toolchain:verify
+          load: true
+
+      - name: Verify VR suite inside image
+        run: |
+          docker run --rm \
+            -e NODE_AUTH_TOKEN=${{ secrets.GITHUB_TOKEN }} \
+            -v "${{ github.workspace }}":/repo \
+            -w /repo \
+            ci-toolchain:verify \
+            bash -lc "yarn install --immutable && yarn lint && yarn typecheck && yarn vr:test"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: .github/docker/ci-toolchain.Dockerfile
+          build-args: |
+            PLAYWRIGHT_VERSION=${{ steps.meta.outputs.playwright_version }}
+          tags: |
+            ghcr.io/david-ding/ci-toolchain:${{ steps.meta.outputs.immutable }}
+            ghcr.io/david-ding/ci-toolchain:stable
+          push: true
