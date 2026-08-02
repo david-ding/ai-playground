@@ -19,6 +19,8 @@ jobs:
     permissions:
       contents: read
       packages: read
+      pages: write
+      id-token: write
     container:
       image: ghcr.io/david-ding/ci-toolchain:${{ inputs.image-tag }}
       credentials:
