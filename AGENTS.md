@@ -9,5 +9,4 @@ The main problems that we are trying to solve are:
 - How do we have confidence in our changes, both in terms of functionalities and visuals, that they don't cause problems for any other partners.
 
 ## Agent behaviour
-- When reporting information to me, be extremely concise and sacrifice grammar for the sake of concision.
 - Although only 2 brands exists in this project, make sure all solutions would scale to 50 brands.

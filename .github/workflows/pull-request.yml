@@ -1,22 +1,24 @@
-name: Publish brand-theme
+name: Visual regression PR gate
 
 on:
-  push:
-    tags:
-      - "brand-theme-v*"
+  pull_request:
+    branches:
+      - master
 
 jobs:
-  vr-gate:
-    uses: ./.github/workflows/_vr-gate.yml
-    secrets:
-      NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  publish:
+  lint-and-typecheck:
     runs-on: ubuntu-latest
-    needs: vr-gate
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - command: lint
+            name: Lint
+          - command: typecheck
+            name: Typecheck
     permissions:
       contents: read
-      packages: write
+      packages: read
     container:
       image: ghcr.io/david-ding/ci-toolchain:stable
       credentials:
@@ -33,11 +35,15 @@ jobs:
           path: ${{ github.workspace }}/.yarn-cache
           key: yarn-${{ hashFiles('yarn.lock') }}
 
-      - run: yarn install --immutable
+      - name: Install dependencies
+        run: yarn install --immutable
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - run: npm publish
-        working-directory: packages/brand-theme
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: ${{ matrix.name }}
+        run: yarn ${{ matrix.command }}
+
+  vr-gate:
+    uses: ./.github/workflows/_vr-gate.yml
+    secrets:
+      NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
