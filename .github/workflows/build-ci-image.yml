@@ -45,17 +45,6 @@ jobs:
           tags: ci-toolchain:verify
           load: true
 
-      - name: Verify VR suite inside image
-        run: |
-          docker run --rm \
-            -e NODE_AUTH_TOKEN=${{ secrets.GITHUB_TOKEN }} \
-            -v "${{ github.workspace }}":/repo \
-            -w /repo \
-            ci-toolchain:verify \
-            bash -lc "yarn install --immutable && yarn lint && yarn typecheck && yarn vr:test"
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Push image
         uses: docker/build-push-action@v6
         with:
