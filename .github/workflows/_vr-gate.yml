@@ -17,10 +17,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
-      contents: read
+      contents: write
       packages: read
-      pages: write
-      id-token: write
     container:
       image: ghcr.io/david-ding/ci-toolchain:${{ inputs.image-tag }}
       credentials:
@@ -45,13 +43,11 @@ jobs:
       - name: Build and compare all brand snapshots
         run: yarn vr:test
 
-      - name: Upload report
+      - name: Deploy report to GitHub Pages
         if: always()
-        uses: actions/upload-pages-artifact@v3
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          path: packages/web/vr-tests/playwright-report
-
-      - name: Deploy to GitHub Pages
-        if: always()
-        id: deployment
-        uses: actions/deploy-pages@v4
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: packages/web/vr-tests/playwright-report
+          destination_dir: prs/${{ github.event.pull_request.number }}
+          keep_history: true
