@@ -42,3 +42,14 @@ jobs:
 
       - name: Build and compare all brand snapshots
         run: yarn vr:test
+
+      - name: Upload report
+        if: always()
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: packages/web/vr-tests/playwright-report
+
+      - name: Deploy to GitHub Pages
+        if: always()
+        id: deployment
+        uses: actions/deploy-pages@v4

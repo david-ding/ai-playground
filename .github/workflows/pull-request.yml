@@ -1,4 +1,4 @@
-name: Visual regression PR gate
+name: Pull request workflow
 
 on:
   pull_request:
@@ -19,6 +19,11 @@ jobs:
     permissions:
       contents: read
       packages: read
+      pages: write
+      id-token: write
+    concurrency:
+      group: playwright-${{ github.event.pull_request.number }}
+      cancel-in-progress: true
     container:
       image: ghcr.io/david-ding/ci-toolchain:stable
       credentials:
