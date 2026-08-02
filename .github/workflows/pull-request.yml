@@ -5,6 +5,10 @@ on:
     branches:
       - master
 
+concurrency:
+  group: pr-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
 jobs:
   lint-and-typecheck:
     runs-on: ubuntu-latest
@@ -19,9 +23,6 @@ jobs:
     permissions:
       contents: read
       packages: read
-    concurrency:
-      group: playwright-${{ github.event.pull_request.number }}
-      cancel-in-progress: true
     container:
       image: ghcr.io/david-ding/ci-toolchain:stable
       credentials:

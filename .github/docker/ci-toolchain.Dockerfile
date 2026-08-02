@@ -20,4 +20,9 @@ RUN corepack enable && corepack prepare yarn@${YARN_VERSION} --activate
 RUN npx --yes playwright@${PLAYWRIGHT_VERSION} install --with-deps chromium-headless-shell \
     && rm -rf /var/lib/apt/lists/* /root/.npm
 
+# Git is required by publishing/versioning tooling (e.g. peaceiris/actions-gh-pages).
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends git \
+    && rm -rf /var/lib/apt/lists/*
+
 RUN node --version && yarn --version
