@@ -68,12 +68,14 @@ jobs:
       #     retention-days: 7
 
       - name: Prepare pages directory
+        if: always()
         run: |
           mkdir pages
           cp -R packages/web/__screenshots__ pages/pr-${{ github.event.number }}
           cp -R packages/web/playwright-report pages/pr-${{ github.event.number }}
 
       - name: Publish reports to github pages
+        if: always()
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -82,6 +84,7 @@ jobs:
           keep_files: true
 
       - name: Comment PR
+        if: always()
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           message: |
