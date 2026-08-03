@@ -15,9 +15,10 @@ ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
 # Bake yarn via corepack at build time. No download at runtime (version is cached).
 RUN corepack enable && corepack prepare yarn@${YARN_VERSION} --activate
 
-# Bake only the headless shell — saves ~640MB vs full chromium.
-# Playwright auto-falls-back to headless-shell when full chromium is absent.
-RUN npx --yes playwright@${PLAYWRIGHT_VERSION} install --with-deps chromium-headless-shell \
+# Full chromium, not headless-shell: headless-shell uses grayscale anti-aliasing
+# and renders fonts slightly thinner/wider, breaking visual regression against
+# goldens generated with full chromium's subpixel AA.
+RUN npx --yes playwright@${PLAYWRIGHT_VERSION} install --with-deps chromium \
     && rm -rf /var/lib/apt/lists/* /root/.npm
 
 # Git is required by publishing/versioning tooling (e.g. peaceiris/actions-gh-pages).
