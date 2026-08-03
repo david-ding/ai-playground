@@ -51,3 +51,11 @@ jobs:
           publish_dir: packages/web/vr-tests/playwright-report
           destination_dir: prs/${{ github.event.pull_request.number }}
           keep_history: true
+
+      - name: Report URL
+        if: always()
+        run: |
+          URL="https://$(echo '${{ github.repository }}' | cut -d/ -f1).github.io/$(echo '${{ github.repository }}' | cut -d/ -f2)/prs/${{ github.event.pull_request.number }}/"
+          echo "Report: $URL"
+          echo "## Visual regression report" >> "$GITHUB_STEP_SUMMARY"
+          echo "[Open report]($URL)" >> "$GITHUB_STEP_SUMMARY"
