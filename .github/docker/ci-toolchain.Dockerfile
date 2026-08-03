@@ -21,8 +21,9 @@ RUN npx --yes playwright@${PLAYWRIGHT_VERSION} install --with-deps chromium-head
     && rm -rf /var/lib/apt/lists/* /root/.npm
 
 # Git is required by publishing/versioning tooling (e.g. peaceiris/actions-gh-pages).
+# ca-certificates so git/curl can verify TLS (node:slim ships none by default).
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends git \
+    && apt-get install -y --no-install-recommends git ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
 RUN node --version && yarn --version
