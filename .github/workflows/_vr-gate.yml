@@ -50,7 +50,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: packages/web/vr-tests/playwright-report
           destination_dir: prs/${{ github.event.pull_request.number }}
-          keep_history: true
+          keep_files: true
 
       - name: Report URL
         if: always()
