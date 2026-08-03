@@ -31,10 +31,10 @@ jobs:
     env:
       YARN_CACHE_FOLDER: ${{ github.workspace }}/.yarn-cache
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Cache yarn dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ${{ github.workspace }}/.yarn-cache
           key: yarn-${{ hashFiles('yarn.lock') }}
