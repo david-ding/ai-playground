@@ -17,4 +17,7 @@ dist
 .DS_Store
 
 # AI outputs
-docs
+docs/*
+!docs/agents/
+!docs/agents/**
+.scratch/
