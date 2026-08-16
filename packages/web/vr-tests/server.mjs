@@ -42,7 +42,7 @@ createServer((req, res) => {
   let filePath;
   if (pathname.startsWith('/fonts/')) {
     const rest = pathname.slice('/fonts/'.length);
-    filePath = join(WEB_ROOT, 'vr-tests', 'fonts', rest);
+    filePath = join(WEB_ROOT, 'fonts', rest);
   } else if (pathname.startsWith('/storybook/')) {
     const rest = pathname.slice('/storybook/'.length);
     filePath = join(WEB_ROOT, 'storybook-static', rest);

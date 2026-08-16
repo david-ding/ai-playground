@@ -1,4 +1,5 @@
 gen
+fonts
 storybook-static
 dist
 playwright-report

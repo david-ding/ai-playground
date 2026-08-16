@@ -1,3 +1,19 @@
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/montserrat-400.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('../fonts/montserrat-700.woff2') format('woff2');
+}
+
 @theme inline {
   --color-input-border: var(--color-stone-300);
   --color-input-border-hover: var(--color-stone-400);
@@ -18,4 +34,9 @@
   --color-btn-ghost-hover: var(--color-stone-400);
   --color-btn-ghost-foreground: var(--color-stone-700);
   --color-progress-track: var(--color-stone-200);
+  --font-sans: 'Montserrat', Arial, sans-serif;
+}
+
+:root {
+  --default-font-family: var(--font-sans);
 }
