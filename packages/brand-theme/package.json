@@ -6,7 +6,8 @@
   "type": "module",
   "main": "themes/brand-a.css",
   "files": [
-    "themes/"
+    "themes/",
+    "fonts/"
   ],
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"

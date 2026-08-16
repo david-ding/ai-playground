@@ -1,3 +1,19 @@
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/open-sans-400.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('../fonts/open-sans-700.woff2') format('woff2');
+}
+
 @theme inline {
   --color-input-border: var(--color-gray-300);
   --color-input-border-hover: var(--color-gray-400);
@@ -18,4 +34,9 @@
   --color-btn-ghost-hover: var(--color-gray-400);
   --color-btn-ghost-foreground: var(--color-gray-700);
   --color-progress-track: var(--color-gray-200);
+  --font-sans: 'Open Sans', Arial, sans-serif;
+}
+
+:root {
+  --default-font-family: var(--font-sans);
 }

@@ -1,4 +1,4 @@
-import { copyFileSync, mkdirSync } from 'fs';
+import { copyFileSync, cpSync, mkdirSync } from 'fs';
 import { createRequire } from 'module';
 import { dirname, resolve } from 'path';
 import { fileURLToPath } from 'url';
@@ -18,6 +18,9 @@ function brandPlugin(): Plugin {
       const dest = resolve(ROOT, 'gen/brand.css');
       mkdirSync(dirname(dest), { recursive: true });
       copyFileSync(src, dest);
+      cpSync(resolve(dirname(src), '..', 'fonts'), resolve(ROOT, 'fonts'), {
+        recursive: true,
+      });
     },
   };
 }
