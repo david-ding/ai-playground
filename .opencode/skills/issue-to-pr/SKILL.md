@@ -23,13 +23,13 @@ Run these checks before asking the first grill question:
 2. Confirm Linear access by fetching the complete issue, comments, relations, attachments, and linked documents where available.
 3. Confirm the configured tracker and `ready-for-agent` label vocabulary. If setup is missing, stop and direct the user to `/setup-matt-pocock-skills`.
 4. Confirm `gh auth status` and repository access before the first grill question.
-5. Confirm `treehouse` is installed, initialized, and has an available pool worktree with `treehouse status`. Acquire the lease after preflight; use a durable lease, not an interactive subshell:
+5. Confirm `treehouse` is installed and inspect the pool with `treehouse status`. An empty pool is not a failure: acquire a durable lease with `treehouse get --lease --json`, which creates and initializes a new pool worktree when none is available:
 
    ```text
    treehouse get --lease --json
    ```
 
-   If Treehouse is unavailable or uninitialized, stop. Do not fall back to the current checkout.
+   If acquisition fails because Treehouse is unavailable, cannot initialize, or cannot create the worktree, stop. Do not fall back to the current checkout. Record the command failure in `state.json`.
 6. Confirm the repository has no conflicting active workflow run for this issue. An active Linear issue alone is not a conflict.
 
 If any preflight check fails, record the failure in `state.json` and stop before making external changes.
@@ -87,7 +87,7 @@ An approval records the phase, timestamp, decision, artifact path, and artifact 
 
 ## Worktree And Branch
 
-Acquire a Treehouse worktree after preflight and before context exploration. From that worktree:
+Acquire a Treehouse worktree after preflight and before context exploration. If `treehouse status` reports no available worktrees, let `treehouse get --lease --json` create one; do not manually create a git worktree or bypass Treehouse. From the leased worktree:
 
 1. Resolve the repository default branch.
 2. Capture its commit SHA as `baseSha` before any implementation changes.
