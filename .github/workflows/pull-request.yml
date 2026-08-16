@@ -1,0 +1,53 @@
+name: Pull request workflow
+
+on:
+  pull_request:
+    branches:
+      - master
+
+concurrency:
+  group: pr-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  lint-and-typecheck:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - command: lint
+            name: Lint
+          - command: typecheck
+            name: Typecheck
+    permissions:
+      contents: read
+      packages: read
+    container:
+      image: ghcr.io/david-ding/ci-toolchain:stable
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ github.token }}
+    env:
+      YARN_CACHE_FOLDER: ${{ github.workspace }}/.yarn-cache
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Cache yarn dependencies
+        uses: actions/cache@v6
+        with:
+          path: ${{ github.workspace }}/.yarn-cache
+          key: yarn-${{ hashFiles('yarn.lock') }}
+
+      - name: Install dependencies
+        run: yarn install --immutable
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: ${{ matrix.name }}
+        run: yarn ${{ matrix.command }}
+
+  vr-gate:
+    uses: ./.github/workflows/_vr-gate.yml
+    secrets:
+      NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

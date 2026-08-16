@@ -18,9 +18,9 @@
     "typecheck": "yarn workspace @ai-playground/web typecheck && yarn workspace @ai-playground/server typecheck",
     "mcp:start": "yarn workspace @ai-playground/mcp-api-tool start",
     "brand-theme:publish": "npm publish packages/brand-theme",
-    "vr:build": "yarn workspace @ai-playground/web vr:build",
-    "vr:test": "yarn workspace @ai-playground/web vr:test",
-    "vr:update": "yarn workspace @ai-playground/web vr:update"
+    "vr:build": "node packages/web/vr-tests/build.mjs",
+    "vr:test": "./scripts/vr-docker.sh",
+    "vr:update": "./scripts/vr-docker.sh --update-snapshots"
   },
   "engines": {
     "node": ">=24.11.0",

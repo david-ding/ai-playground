@@ -1,0 +1,58 @@
+name: Build ci-toolchain image
+
+on:
+  push:
+    tags:
+      - "toolchain-v*"
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Compute image tag
+        id: meta
+        run: |
+          NODE_VERSION=$(sed 's/^v//' .nvmrc)
+          PLAYWRIGHT_VERSION=$(node -p "require('./package.json').devDependencies['@playwright/test']")
+          echo "immutable=node${NODE_VERSION}-pw${PLAYWRIGHT_VERSION}" >> "$GITHUB_OUTPUT"
+          echo "node_version=${NODE_VERSION}" >> "$GITHUB_OUTPUT"
+          echo "playwright_version=${PLAYWRIGHT_VERSION}" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and load image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: .github/docker/ci-toolchain.Dockerfile
+          build-args: |
+            PLAYWRIGHT_VERSION=${{ steps.meta.outputs.playwright_version }}
+          tags: ci-toolchain:verify
+          load: true
+
+      - name: Push image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: .github/docker/ci-toolchain.Dockerfile
+          build-args: |
+            PLAYWRIGHT_VERSION=${{ steps.meta.outputs.playwright_version }}
+          tags: |
+            ghcr.io/david-ding/ci-toolchain:${{ steps.meta.outputs.immutable }}
+            ghcr.io/david-ding/ci-toolchain:stable
+          push: true

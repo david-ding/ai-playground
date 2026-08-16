@@ -9,10 +9,7 @@
     "build:brand-b": "VITE_BRAND=brand-b yarn build",
     "lint": "oxlint",
     "typecheck": "tsc -b",
-    "preview": "vite preview",
-    "vr:build": "node vr-tests/build.mjs",
-    "vr:test": "node vr-tests/build.mjs && playwright test --config vr-tests/playwright.config.ts",
-    "vr:update": "node vr-tests/build.mjs && playwright test --config vr-tests/playwright.config.ts --update-snapshots"
+    "preview": "vite preview"
   },
   "dependencies": {
     "@david-ding/brand-theme": "0.1.0",

@@ -1,0 +1,61 @@
+name: VR gate (reusable)
+
+on:
+  workflow_call:
+    inputs:
+      image-tag:
+        description: ci-toolchain image tag to run on
+        required: false
+        type: string
+        default: stable
+    secrets:
+      NODE_AUTH_TOKEN:
+        required: false
+
+jobs:
+  vr-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+      packages: read
+    container:
+      image: ghcr.io/david-ding/ci-toolchain:${{ inputs.image-tag }}
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ github.token }}
+    env:
+      YARN_CACHE_FOLDER: ${{ github.workspace }}/.yarn-cache
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Cache yarn dependencies
+        uses: actions/cache@v6
+        with:
+          path: ${{ github.workspace }}/.yarn-cache
+          key: yarn-${{ hashFiles('yarn.lock') }}
+
+      - name: Install dependencies
+        run: yarn install --immutable
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
+
+      - name: Build and compare all brand snapshots
+        run: yarn vr:test
+
+      - name: Deploy report to GitHub Pages
+        if: always()
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: packages/web/vr-tests/playwright-report
+          destination_dir: prs/${{ github.event.pull_request.number }}
+          keep_files: true
+
+      - name: Report URL
+        if: always()
+        run: |
+          URL="https://$(echo '${{ github.repository }}' | cut -d/ -f1).github.io/$(echo '${{ github.repository }}' | cut -d/ -f2)/prs/${{ github.event.pull_request.number }}/"
+          echo "Report: $URL"
+          echo "## Visual regression report" >> "$GITHUB_STEP_SUMMARY"
+          echo "[Open report]($URL)" >> "$GITHUB_STEP_SUMMARY"
