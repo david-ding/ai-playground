@@ -14,13 +14,20 @@ function slugify(value: string): string {
     .toLowerCase();
 }
 
+function slugifyTitle(value: string): string {
+  return value
+    .replace(/[^a-zA-Z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')
+    .toLowerCase();
+}
+
 function resolveStoryId(storyTest: StoryTest, index: StoryIndex): string {
   const { module, exportName } = storyTest.story;
   const title = module.default.title;
   if (!title) throw new Error(`CSF module has no title for ${exportName}`);
   if (!(exportName in module)) throw new Error(`CSF story export not found: ${exportName}`);
 
-  const id = `${slugify(title)}--${slugify(exportName)}`;
+  const id = `${slugifyTitle(title)}--${slugify(exportName)}`;
   const entry = index.entries[id];
   if (!entry || entry.type !== 'story' || entry.title !== title) {
     throw new Error(`Story is missing from generated Storybook index: ${id}`);
