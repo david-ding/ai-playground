@@ -1,7 +1,7 @@
 import * as stories from './FileUpload.stories';
-import type { StoryTest } from '../../vr-tests/story-declarations';
+import { createStoryReference, type StoryTest } from '../../vr-tests/story-declarations';
 
 export default {
   description: 'File upload idle state',
-  story: { value: stories.Idle, module: stories, exportName: 'Idle' },
+  story: createStoryReference(stories, 'Idle'),
 } satisfies StoryTest;
