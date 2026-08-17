@@ -32,16 +32,23 @@ function resolveStoryId(storyTest: StoryTest, index: StoryIndex, brand: string):
   return matchingEntries[0].id;
 }
 
-function readIndex(brand: string): StoryIndex {
-  return JSON.parse(
-    readFileSync(new URL(`../storybook-static/${brand}/index.json`, import.meta.url), 'utf8'),
-  ) as StoryIndex;
+function readIndex(brand: string, description: string): StoryIndex {
+  try {
+    return JSON.parse(
+      readFileSync(new URL(`../storybook-static/${brand}/index.json`, import.meta.url), 'utf8'),
+    ) as StoryIndex;
+  } catch (error) {
+    throw new Error(
+      `Story declaration "${description}" could not load the generated Storybook index for brand "${brand}"`,
+      { cause: error },
+    );
+  }
 }
 
 for (const storyTest of storyTests) {
   test(storyTest.description, async ({ page }, testInfo) => {
     const brand = testInfo.project.name;
-    const storyId = resolveStoryId(storyTest, readIndex(brand), brand);
+    const storyId = resolveStoryId(storyTest, readIndex(brand, storyTest.description), brand);
     await openWithFonts(page, `/storybook/${brand}/iframe.html?id=${storyId}`);
     await page.locator('#storybook-root').waitFor({ state: 'attached' });
     await waitForFonts(page);

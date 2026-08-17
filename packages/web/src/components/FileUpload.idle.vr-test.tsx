@@ -3,5 +3,5 @@ import type { StoryTest } from '../../vr-tests/story-declarations';
 
 export default {
   description: 'File upload idle state',
-  story: { module: stories, exportName: 'Idle' },
+  story: { value: stories.Idle, module: stories, exportName: 'Idle' },
 } satisfies StoryTest;

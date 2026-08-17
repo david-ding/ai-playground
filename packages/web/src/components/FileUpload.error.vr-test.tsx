@@ -3,5 +3,5 @@ import type { StoryTest } from '../../vr-tests/story-declarations';
 
 export default {
   description: 'File upload error state',
-  story: { module: stories, exportName: 'Error' },
+  story: { value: stories.Error, module: stories, exportName: 'Error' },
 } satisfies StoryTest;

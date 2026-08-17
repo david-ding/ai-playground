@@ -6,6 +6,7 @@ export type StoryModule = {
 export type StoryTest = {
   description: string;
   story: {
+    value: unknown;
     module: StoryModule;
     exportName: string;
   };
