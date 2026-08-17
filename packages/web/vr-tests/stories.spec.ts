@@ -3,36 +3,33 @@ import { expect, test, openWithFonts, waitForFonts } from './fixtures';
 import { storyTests } from './story-tests';
 import type { StoryTest } from './story-declarations';
 
-type StoryIndexEntry = { id: string; title?: string; type?: string };
+type StoryIndexEntry = { id: string; title?: string; type?: string; exportName?: string };
 type StoryIndex = { entries: Record<string, StoryIndexEntry> };
 
-function slugify(value: string): string {
-  return value
-    .replace(/([a-z])([A-Z])/g, '$1-$2')
-    .replace(/[^a-zA-Z0-9]+/g, '-')
-    .replace(/^-|-$/g, '')
-    .toLowerCase();
-}
-
-function slugifyTitle(value: string): string {
-  return value
-    .replace(/[^a-zA-Z0-9]+/g, '-')
-    .replace(/^-|-$/g, '')
-    .toLowerCase();
-}
-
-function resolveStoryId(storyTest: StoryTest, index: StoryIndex): string {
+function resolveStoryId(storyTest: StoryTest, index: StoryIndex, brand: string): string {
   const { module, exportName } = storyTest.story;
   const title = module.default.title;
-  if (!title) throw new Error(`CSF module has no title for ${exportName}`);
-  if (!(exportName in module)) throw new Error(`CSF story export not found: ${exportName}`);
-
-  const id = `${slugifyTitle(title)}--${slugify(exportName)}`;
-  const entry = index.entries[id];
-  if (!entry || entry.type !== 'story' || entry.title !== title) {
-    throw new Error(`Story is missing from generated Storybook index: ${id}`);
+  if (!title) {
+    throw new Error(
+      `Story declaration "${storyTest.description}" has no CSF title for export "${exportName}" in brand "${brand}"`,
+    );
   }
-  return entry.id;
+  if (!(exportName in module)) {
+    throw new Error(
+      `Story declaration "${storyTest.description}" references missing CSF export "${exportName}" in brand "${brand}"`,
+    );
+  }
+
+  const entries = Object.values(index.entries).filter(
+    (entry) => entry.type === 'story' && entry.title === title,
+  );
+  const matchingEntries = entries.filter((entry) => entry.exportName === exportName);
+  if (matchingEntries.length !== 1) {
+    throw new Error(
+      `Story declaration "${storyTest.description}" could not resolve CSF story "${title}.${exportName}" in brand "${brand}"`,
+    );
+  }
+  return matchingEntries[0].id;
 }
 
 function readIndex(brand: string): StoryIndex {
@@ -44,7 +41,7 @@ function readIndex(brand: string): StoryIndex {
 for (const storyTest of storyTests) {
   test(storyTest.description, async ({ page }, testInfo) => {
     const brand = testInfo.project.name;
-    const storyId = resolveStoryId(storyTest, readIndex(brand));
+    const storyId = resolveStoryId(storyTest, readIndex(brand), brand);
     await openWithFonts(page, `/storybook/${brand}/iframe.html?id=${storyId}`);
     await page.locator('#storybook-root').waitFor({ state: 'attached' });
     await waitForFonts(page);
