@@ -19,6 +19,11 @@ function resolveStoryId(storyTest: StoryTest, index: StoryIndex, brand: string):
       `Story declaration "${storyTest.description}" references missing CSF export "${exportName}" in brand "${brand}"`,
     );
   }
+  if (module[exportName] !== storyTest.story.value) {
+    throw new Error(
+      `Story declaration "${storyTest.description}" has mismatched CSF story metadata for "${title}.${exportName}" in brand "${brand}"`,
+    );
+  }
 
   const entries = Object.values(index.entries).filter(
     (entry) => entry.type === 'story' && entry.title === title,
