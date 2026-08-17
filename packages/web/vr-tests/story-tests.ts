@@ -1,8 +1,18 @@
+import { globSync } from 'node:fs';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import type { StoryTest } from './story-declarations';
-import idle from '../src/components/FileUpload.idle.vr-test';
-import requestingUrl from '../src/components/FileUpload.requesting-url.vr-test';
-import uploading from '../src/components/FileUpload.uploading.vr-test';
-import done from '../src/components/FileUpload.done.vr-test';
-import error from '../src/components/FileUpload.error.vr-test';
 
-export const storyTests: StoryTest[] = [idle, requestingUrl, uploading, done, error];
+const declarationsDirectory = dirname(fileURLToPath(import.meta.url));
+const declarationPaths = globSync('../src/**/*.vr-test.tsx', {
+  cwd: declarationsDirectory,
+})
+  .map((path) => resolve(declarationsDirectory, path))
+  .sort();
+
+export const storyTests: StoryTest[] = await Promise.all(
+  declarationPaths.map(async (path) => {
+    const declaration = await import(pathToFileURL(path).href);
+    return declaration.default as StoryTest;
+  }),
+);
