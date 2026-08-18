@@ -20,5 +20,13 @@
     "react/jsx-no-useless-fragment": "warn",
     "react/hook-use-state": "warn",
     "react/display-name": "off"
-  }
+  },
+  "overrides": [
+    {
+      "files": ["**/*.vr-test.tsx"],
+      "rules": {
+        "react/only-export-components": "off"
+      }
+    }
+  ]
 }
